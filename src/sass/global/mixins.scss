@@ -1,0 +1,70 @@
+// Миксин для удобной вставки SVG
+@import "sprite-svg.scss";
+@import "../librares/_mq";
+
+$mq-base-font-size: 16px !default;
+
+@function mq-px2em($px, $base-font-size: $mq-base-font-size) {
+  @if unitless($px) {
+    @warn "Assuming #{$px} to be in pixels, attempting to convert it into pixels.";
+    @return mq-px2em($px + 0px); // That may fail.
+  } @else if unit($px) == em {
+    @return $px;
+  }
+  @return ($px / $base-font-size) * 1em;
+}
+
+$sprite: map-get($icons, sprite) !default;
+
+@function sprite-attr($icon, $attr) {
+  $newIcon: map-get($icons, $icon);
+  @if $newIcon == null {
+    @warn "Can't find an icon with the name #{$icon}";
+  }
+  @return map-get($newIcon, $attr);
+}
+
+@function icon-attr($icon) {
+  $attr: (
+          width: sprite-attr($icon, width),
+          height: sprite-attr($icon, height),
+          x: sprite-attr($icon, backgroundX),
+          y: sprite-attr($icon, backgroundY)
+  );
+
+  @return $attr;
+}
+
+
+@function icon_width($icon) {
+  @return mq-px2em(sprite-attr($icon, width));
+}
+
+@function icon_height($icon) {
+  @return mq-px2em(sprite-attr($icon, height));
+}
+
+%sprite
+
+{
+  display: inline-block;
+  background-image: url(map-get($sprite, svgPath));
+  background-size: mq-px2em(map-get($sprite, width)) mq-px2em(map-get($sprite, height));
+}
+
+@mixin sprite($icon, $type: all) {
+  @if $type == all {
+    @extend %sprite;
+  }
+
+  $iconMap: icon-attr($icon);
+
+  @if $type == all or $type == size {
+    width: mq-px2em(map-get($iconMap, width) + 1);
+    height: mq-px2em(map-get($iconMap, height) + 1);
+  }
+
+  @if $type == all or $type == bg {
+    background-position: mq-px2em(map-get($iconMap, x) - 5) mq-px2em(map-get($iconMap, y) - 5);
+  }
+}

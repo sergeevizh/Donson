@@ -1,0 +1,33 @@
+.body-page {
+  font-family: $f-primary;
+  font-size: $f-text-size;
+  line-height: $f-base-lh;
+
+  color: $c-primary;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container-full {
+  width: 100%;
+}
+
+// Центровщик
+.container-inner {
+  width: 1024px;
+  margin: 0 auto;
+}
+
+// FLEX блоки
+
+.flex-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.flex-dir-column {
+  flex-direction: column;
+}
